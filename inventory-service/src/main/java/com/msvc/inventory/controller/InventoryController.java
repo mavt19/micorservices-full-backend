@@ -1,4 +1,4 @@
-package com.msvc.inventory;
+package com.msvc.inventory.controller;
 
 import com.msvc.inventory.dto.InventoryRequest;
 import com.msvc.inventory.dto.InventoryResponse;

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 @Service
 @AllArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
@@ -21,21 +22,22 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     @Transactional(readOnly = true)
     public Mono<Boolean> isInStock(String skuCode) {
-
-        return Mono.just(inventoryRepository.findBySkuCode(skuCode).isPresent());
+        return inventoryRepository.findBySkuCode(skuCode)
+                .map(x-> true)
+                .defaultIfEmpty(false);
     }
 
     @Override
     public Mono<InventoryResponse> create(InventoryRequest inventoryRequest) {
         return Mono.just(inventoryRequest)
                 .map(inventoryMapper::dtoToEntity)
-                .map(inventoryRepository::save)
+                .flatMap(inventoryRepository::save)
                 .map(inventoryMapper::entityToDto)
                 .log();
     }
 
     @Override
     public Flux<InventoryResponse> findAll() {
-        return Flux.fromIterable(inventoryRepository.findAll()).map(inventoryMapper::entityToDto);
+        return inventoryRepository.findAll().map(inventoryMapper::entityToDto);
     }
 }

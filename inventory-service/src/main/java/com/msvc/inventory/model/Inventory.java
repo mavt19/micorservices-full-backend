@@ -1,10 +1,12 @@
 package com.msvc.inventory.model;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "inventories")
+
+@Table(schema = "public", name = "inventories")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -12,9 +14,9 @@ import lombok.*;
 @Setter
 public class Inventory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(value = "sku_code")
     private String skuCode;
 
     private Integer quantity;
