@@ -18,6 +18,6 @@ public class InventoryRequest {
     private String skuCode;
 
     @NotNull
-    @Min(1)
+    @Min(0)
     private Integer quantity;
 }

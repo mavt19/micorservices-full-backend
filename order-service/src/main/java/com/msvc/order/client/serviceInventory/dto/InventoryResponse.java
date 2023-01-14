@@ -1,4 +1,4 @@
-package com.msvc.inventory.dto;
+package com.msvc.order.client.serviceInventory.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,12 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class InventoryResponse {
-
-    private Long id;
-
     private String skuCode;
-
-    private Integer quantity;
-
     private Boolean isInStock;
 }
