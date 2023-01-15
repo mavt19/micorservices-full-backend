@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
@@ -39,5 +41,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Flux<InventoryResponse> findAll() {
         return inventoryRepository.findAll().map(inventoryMapper::entityToDto);
+    }
+
+    @Override
+    public Flux<InventoryResponse> isInStock(List<String> skuCodes) {
+//        inventoryRepository.findBySkuCodes(skuCodes).log().subscribe();
+        return inventoryRepository.findBySkuCodeIn(skuCodes).map(inventoryMapper::entityToDto);
     }
 }

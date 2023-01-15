@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/inventory")
 @RequiredArgsConstructor
@@ -31,9 +33,9 @@ public class InventoryController {
         return inventoryService.create(inventoryRequest).log();
     }
 
-    @GetMapping("/{sku-code}")
-    public Mono<Boolean> isInStock(@NotBlank @PathVariable("sku-code") String skuCode){
+    @GetMapping("/in-stock")
+    public Flux<InventoryResponse> isInStock(@NotBlank @RequestParam("sku-codes") List<String> skuCodes){
 
-        return inventoryService.isInStock(skuCode);
+        return inventoryService.isInStock(skuCodes);
     }
 }
