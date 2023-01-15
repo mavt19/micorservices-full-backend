@@ -30,11 +30,11 @@ public class OrderServiceImpl implements OrderService {
 
         return inventoryServiceClient.isInStock(skuCodes)
                 .switchIfEmpty(Mono.error(new NotFoundException("skuCodes " + skuCodes+ " not found")))
-                .collectList()
                 .doOnNext(x-> filterHasStock(x, skuCodes))
+                .count()
                 .map(x-> orderRequest)
                     .map(orderMapper::dtoToModel)
-//                    .map(orderRepository::save)
+                    .map(orderRepository::save)
                     .map(response -> OrderResponse.builder()
                             .id(response.getId())
                             .orderNumber(response.getOrderNumber())
@@ -42,18 +42,14 @@ public class OrderServiceImpl implements OrderService {
                     ).log();
     }
 
-    private void filterHasStock(List<InventoryResponse> inventoryList, List<String> skuCodes) {
+    private void filterHasStock(InventoryResponse inventoryList, List<String> skuCodes) {
         System.out.println("entro"+ inventoryList);
-
-        inventoryList.forEach(i-> {
-            if(Boolean.FALSE.equals(i.getIsInStock())){
-                throw new NotFoundException("skuCode " + i.getSkuCode()+ " doesn't have stock");
-            }
-        });
-        List<String> skuCodesFromDb = inventoryList.stream().map(InventoryResponse::getSkuCode).toList();
+            if(Boolean.FALSE.equals(inventoryList.getIsInStock())){
+                throw new NotFoundException("skuCode " + inventoryList.getSkuCode()+ " doesn't have stock");
+            };
 
         skuCodes.forEach(x-> {
-            if(!skuCodesFromDb.contains(x)){
+            if(!inventoryList.getSkuCode().contains(x)){
                 throw new NotFoundException("skuCode " + x + " not found");
             }
         });
